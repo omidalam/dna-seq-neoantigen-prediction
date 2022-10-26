@@ -170,73 +170,73 @@ rule bwa_index:
         "0.45.1/bio/bwa/index"
 
 
-rule download_HLALA_graph:
-    output:
-        directory("resources/graphs/PRG_MHC_GRCh38_withIMGT/PRG"),
-        directory("resources/graphs/PRG_MHC_GRCh38_withIMGT/extendedReferenceGenome"),
-        directory("resources/graphs/PRG_MHC_GRCh38_withIMGT/knownReferences"),
-        directory("resources/graphs/PRG_MHC_GRCh38_withIMGT/mapping"),
-        directory("resources/graphs/PRG_MHC_GRCh38_withIMGT/mapping_PRGonly"),
-        directory("resources/graphs/PRG_MHC_GRCh38_withIMGT/referenceGenomeSimulations"),
-        directory("resources/graphs/PRG_MHC_GRCh38_withIMGT/sampledReferenceGenomes"),
-        directory("resources/graphs/PRG_MHC_GRCh38_withIMGT/translation"),
-        "resources/graphs/PRG_MHC_GRCh38_withIMGT/sequences.txt",
-    log:
-        "logs/download-HLA-LA-graph.log",
-    cache: True
-    shell:
-        "cd resources/graphs && wget  http://www.well.ox.ac.uk/downloads/PRG_MHC_GRCh38_withIMGT.tar.gz "
-        "&& tar -xvzf PRG_MHC_GRCh38_withIMGT.tar.gz"
+# rule download_HLALA_graph:
+#     output:
+#         directory("resources/graphs/PRG_MHC_GRCh38_withIMGT/PRG"),
+#         directory("resources/graphs/PRG_MHC_GRCh38_withIMGT/extendedReferenceGenome"),
+#         directory("resources/graphs/PRG_MHC_GRCh38_withIMGT/knownReferences"),
+#         directory("resources/graphs/PRG_MHC_GRCh38_withIMGT/mapping"),
+#         directory("resources/graphs/PRG_MHC_GRCh38_withIMGT/mapping_PRGonly"),
+#         directory("resources/graphs/PRG_MHC_GRCh38_withIMGT/referenceGenomeSimulations"),
+#         directory("resources/graphs/PRG_MHC_GRCh38_withIMGT/sampledReferenceGenomes"),
+#         directory("resources/graphs/PRG_MHC_GRCh38_withIMGT/translation"),
+#         "resources/graphs/PRG_MHC_GRCh38_withIMGT/sequences.txt",
+#     log:
+#         "logs/download-HLA-LA-graph.log",
+#     cache: True
+#     shell:
+#         "cd resources/graphs && wget  http://www.well.ox.ac.uk/downloads/PRG_MHC_GRCh38_withIMGT.tar.gz "
+#         "&& tar -xvzf PRG_MHC_GRCh38_withIMGT.tar.gz"
 
 
-rule index_HLALA:
-    input:
-        "resources/graphs/PRG_MHC_GRCh38_withIMGT/sequences.txt",
-    output:
-        "resources/graphs/PRG_MHC_GRCh38_withIMGT/serializedGRAPH",
-        "resources/graphs/PRG_MHC_GRCh38_withIMGT/serializedGRAPH_preGapPathindex",
-    cache: True
-    conda:
-        "../envs/hla_la.yaml"
-    params:
-        path=lambda wc, input: os.path.dirname(os.path.dirname(input[0])),
-        graph=lambda wc, input: os.path.basename(os.path.dirname(input[0])),
-    log:
-        "logs/index-HLA-LA-graph.log",
-    shell:
-        "HLA-LA.pl --prepareGraph 1 --customGraphDir {params.path} --graph {params.graph} > {log} 2>&1"
+# rule index_HLALA:
+#     input:
+#         "resources/graphs/PRG_MHC_GRCh38_withIMGT/sequences.txt",
+#     output:
+#         "resources/graphs/PRG_MHC_GRCh38_withIMGT/serializedGRAPH",
+#         "resources/graphs/PRG_MHC_GRCh38_withIMGT/serializedGRAPH_preGapPathindex",
+#     cache: True
+#     conda:
+#         "../envs/hla_la.yaml"
+#     params:
+#         path=lambda wc, input: os.path.dirname(os.path.dirname(input[0])),
+#         graph=lambda wc, input: os.path.basename(os.path.dirname(input[0])),
+#     log:
+#         "logs/index-HLA-LA-graph.log",
+#     shell:
+#         "HLA-LA.pl --prepareGraph 1 --customGraphDir {params.path} --graph {params.graph} > {log} 2>&1"
 
 
-rule get_vep_cache:
-    output:
-        directory("resources/vep/cache"),
-    params:
-        species=config["ref"]["species"],
-        build=config["ref"]["build"],
-        release=config["ref"]["release"],
-    log:
-        "logs/vep/cache.log",
-    cache: True
-    wrapper:
-        "0.59.2/bio/vep/cache"
+# rule get_vep_cache:
+#     output:
+#         directory("resources/vep/cache"),
+#     params:
+#         species=config["ref"]["species"],
+#         build=config["ref"]["build"],
+#         release=config["ref"]["release"],
+#     log:
+#         "logs/vep/cache.log",
+#     cache: True
+#     wrapper:
+#         "0.59.2/bio/vep/cache"
 
 
-rule get_vep_plugins:
-    output:
-        directory("resources/vep/plugins"),
-    params:
-        release=config["ref"]["release"],
-    log:
-        "logs/vep/plugins.log",
-    cache: True
-    wrapper:
-        "0.59.2/bio/vep/plugins"
+# rule get_vep_plugins:
+#     output:
+#         directory("resources/vep/plugins"),
+#     params:
+#         release=config["ref"]["release"],
+#     log:
+#         "logs/vep/plugins.log",
+#     cache: True
+#     wrapper:
+#         "0.59.2/bio/vep/plugins"
 
 
-rule make_sampleheader:
-    output:
-        "resources/sampleheader.txt",
-    log:
-        "logs/germline-reheader-sample.log",
-    shell:
-        "echo 'TUMOR' > {output}"
+# rule make_sampleheader:
+#     output:
+#         "resources/sampleheader.txt",
+#     log:
+#         "logs/germline-reheader-sample.log",
+#     shell:
+#         "echo 'TUMOR' > {output}"

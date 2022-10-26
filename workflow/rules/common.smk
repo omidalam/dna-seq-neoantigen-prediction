@@ -210,107 +210,107 @@ def get_recalibrate_quality_input(wildcards, bai=False):
 ## HLA Typing ##
 
 
-def get_optitype_reads_input(wildcards):
-    if is_activated("HLAtyping/optitype_prefiltering"):
-        if is_paired_end(wildcards.sample, "DNA"):
-            return expand(
-                "results/razers3/fastq/{sample}_{fq}.fished.fastq",
-                sample=wildcards.sample,
-                fq=["R1", "R2"],
-            )
-        return "results/razers3/fastq/{sample}_single.fastq"
-    else:
-        return get_map_reads_input(wildcards)
+# def get_optitype_reads_input(wildcards):
+#     if is_activated("HLAtyping/optitype_prefiltering"):
+#         if is_paired_end(wildcards.sample, "DNA"):
+#             return expand(
+#                 "results/razers3/fastq/{sample}_{fq}.fished.fastq",
+#                 sample=wildcards.sample,
+#                 fq=["R1", "R2"],
+#             )
+#         return "results/razers3/fastq/{sample}_single.fastq"
+#     else:
+#         return get_map_reads_input(wildcards)
 
 
-def get_oncoprint_batch(wildcards):
-    if wildcards.batch == "all":
-        groups = samples[samples["type"] == "tumor"]["sample"].unique()
-    else:
-        groups = samples.loc[
-            samples[config["oncoprint"]["stratify"]["by-column"]] == wildcards.batch,
-            "group",
-        ].unique()
-    return expand(
-        "results/merged-calls/{group}.{{event}}.fdr-controlled.bcf", group=groups
-    )
+# def get_oncoprint_batch(wildcards):
+#     if wildcards.batch == "all":
+#         groups = samples[samples["type"] == "tumor"]["sample"].unique()
+#     else:
+#         groups = samples.loc[
+#             samples[config["oncoprint"]["stratify"]["by-column"]] == wildcards.batch,
+#             "group",
+#         ].unique()
+#     return expand(
+#         "results/merged-calls/{group}.{{event}}.fdr-controlled.bcf", group=groups
+#     )
 
 
-## variant calls ##
+# ## variant calls ##
 
 
-def get_annotated_bcf(wildcards):
-    selection = ".annotated"
-    return "results/calls/{pair}.{scatteritem}{selection}.bcf".format(
-        pair=wildcards.pair, selection=selection, scatteritem=wildcards.scatteritem
-    )
+# def get_annotated_bcf(wildcards):
+#     selection = ".annotated"
+#     return "results/calls/{pair}.{scatteritem}{selection}.bcf".format(
+#         pair=wildcards.pair, selection=selection, scatteritem=wildcards.scatteritem
+#     )
 
 
-def get_scattered_calls(ext=".bcf"):
-    def inner(wildcards):
-        return expand(
-            "results/calls/{{pair}}.{caller}.{{scatteritem}}.sorted{ext}",
-            caller=caller,
-            ext=ext,
-        )
+# def get_scattered_calls(ext=".bcf"):
+#     def inner(wildcards):
+#         return expand(
+#             "results/calls/{{pair}}.{caller}.{{scatteritem}}.sorted{ext}",
+#             caller=caller,
+#             ext=ext,
+#         )
 
-    return inner
-
-
-def get_fdr_control_params(wildcards):
-    query = config["calling"]["fdr-control"]["events"][wildcards.event]
-    threshold = query.get(
-        "threshold", config["calling"]["fdr-control"].get("threshold", 0.05)
-    )
-    events = query["varlociraptor"]
-    return {"threshold": threshold, "events": events}
+#     return inner
 
 
-def get_pair_variants(wildcards, index):
-    if index:
-        ext = ".csi"
-    else:
-        ext = ""
-    variants = [
-        "results/strelka/somatic/{}/results/variants/somatic.complete.tumor.bcf{}".format(
-            wildcards.sample, ext
-        )
-    ]
-    variants.append(
-        "results/strelka/germline/{}/results/variants/variants.reheader.bcf{}".format(
-            get_normal(wildcards), ext
-        )
-    )
-    return variants
+# def get_fdr_control_params(wildcards):
+#     query = config["calling"]["fdr-control"]["events"][wildcards.event]
+#     threshold = query.get(
+#         "threshold", config["calling"]["fdr-control"].get("threshold", 0.05)
+#     )
+#     events = query["varlociraptor"]
+#     return {"threshold": threshold, "events": events}
 
 
-def get_pair_observations(wildcards):
-    return expand(
-        "results/observations/{pair}/{sample}.{caller}.{scatteritem}.bcf",
-        caller=wildcards.caller,
-        pair=wildcards.pair,
-        scatteritem=wildcards.scatteritem,
-        sample=get_paired_samples(wildcards),
-    )
+# def get_pair_variants(wildcards, index):
+#     if index:
+#         ext = ".csi"
+#     else:
+#         ext = ""
+#     variants = [
+#         "results/strelka/somatic/{}/results/variants/somatic.complete.tumor.bcf{}".format(
+#             wildcards.sample, ext
+#         )
+#     ]
+#     variants.append(
+#         "results/strelka/germline/{}/results/variants/variants.reheader.bcf{}".format(
+#             get_normal(wildcards), ext
+#         )
+#     )
+#     return variants
 
 
-def get_merge_input(ext=".bcf"):
-    def inner(wildcards):
-        return expand(
-            "results/calls/{{pair}}.{vartype}.{{event}}.fdr-controlled{ext}",
-            ext=ext,
-            vartype=["SNV", "INS", "DEL", "MNV"],
-            filter=config["calling"]["fdr-control"]["events"][wildcards.event],
-        )
-
-    return inner
+# def get_pair_observations(wildcards):
+#     return expand(
+#         "results/observations/{pair}/{sample}.{caller}.{scatteritem}.bcf",
+#         caller=wildcards.caller,
+#         pair=wildcards.pair,
+#         scatteritem=wildcards.scatteritem,
+#         sample=get_paired_samples(wildcards),
+#     )
 
 
-def get_pair_aliases(wildcards):
-    return [
-        samples.loc[samples.loc[wildcards.pair, "matched_normal"], "type"],
-        samples.loc[wildcards.pair, "type"],
-    ]
+# def get_merge_input(ext=".bcf"):
+#     def inner(wildcards):
+#         return expand(
+#             "results/calls/{{pair}}.{vartype}.{{event}}.fdr-controlled{ext}",
+#             ext=ext,
+#             vartype=["SNV", "INS", "DEL", "MNV"],
+#             filter=config["calling"]["fdr-control"]["events"][wildcards.event],
+#         )
+
+#     return inner
+
+
+# def get_pair_aliases(wildcards):
+#     return [
+#         samples.loc[samples.loc[wildcards.pair, "matched_normal"], "type"],
+#         samples.loc[wildcards.pair, "type"],
+#     ]
 
 
 def get_tabix_params(wildcards):
@@ -321,28 +321,28 @@ def get_tabix_params(wildcards):
     raise ValueError("Invalid format for tabix: {}".format(wildcards.format))
 
 
-## RNA ##
+# ## RNA ##
 
 
-def get_quant_reads_input(wildcards):
-    if is_paired_end(wildcards.sample, "RNA"):
-        return [
-            "results/merged/RNA/{sample}_R1.fastq.gz",
-            "results/merged/RNA/{sample}_R2.fastq.gz",
-        ]
-    return "results/merged/RNA/{sample}_single.fastq.gz"
+# def get_quant_reads_input(wildcards):
+#     if is_paired_end(wildcards.sample, "RNA"):
+#         return [
+#             "results/merged/RNA/{sample}_R1.fastq.gz",
+#             "results/merged/RNA/{sample}_R2.fastq.gz",
+#         ]
+#     return "results/merged/RNA/{sample}_single.fastq.gz"
 
 
-def kallisto_params(wildcards, input):
-    extra = config["params"]["kallisto"]
-    if len(input.fastq) == 1:
-        extra += " --single"
-        extra += (
-            " --fragment-length {unit.fragment_len_mean} " "--sd {unit.fragment_len_sd}"
-        ).format(unit=units.loc[(wildcards.sample, wildcards.unit)])
-    else:
-        extra += " --fusion"
-    return extra
+# def kallisto_params(wildcards, input):
+#     extra = config["params"]["kallisto"]
+#     if len(input.fastq) == 1:
+#         extra += " --single"
+#         extra += (
+#             " --fragment-length {unit.fragment_len_mean} " "--sd {unit.fragment_len_sd}"
+#         ).format(unit=units.loc[(wildcards.sample, wildcards.unit)])
+#     else:
+#         extra += " --fusion"
+#     return extra
 
 
 ## helper functions ##
