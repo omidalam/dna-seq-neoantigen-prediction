@@ -126,6 +126,8 @@ rule get_callregions:
         " | head -n {params.n_contigs} | bgzip -c > {output} && tabix -p bed {output}"
 
 
+## This is not able to download all the files from the ensemble ftp server.
+## I added the required files manually, but needs to be fixed for the actuall pipeline.
 rule get_known_variants:
     input:
         # use fai to annotate contig lengths for GATK BQSR
