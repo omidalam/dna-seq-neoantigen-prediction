@@ -1,3 +1,26 @@
+rule mutect2:
+    input:
+        normal_bam=get_normal_bam,
+        fasta="resources/genome.fasta",
+        tumor_bam="results/recal/{sample}.sorted.bam",
+    output:
+        vcf="results/mutect/{sample}/somatic.snvs.vcf.gz",
+        # test="results/mutect/{sample}/test.txt",
+    message:
+        "Testing Mutect2 with {wildcards.sample}",
+    params:
+        normal_name=get_normal,
+    threads: 4
+    resources:
+        mem_mb=1024,
+    conda:
+        "../envs/mutect2.yaml"
+    log:
+        "logs/mutect_{sample}.log",
+    # shell:
+    #     "echo {input.normal_bam} sample name is {params.normal_name}>{output.test}"
+    script:
+        "../scripts/mutect.py"
 rule strelka_somatic:
     input:
         normal=get_normal_bam,
