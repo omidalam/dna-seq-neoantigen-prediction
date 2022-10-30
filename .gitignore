@@ -1,4 +1,6 @@
 *
+!workflow
+!workflow/*
 !scripts
 !scripts/*
 !scripts/common
