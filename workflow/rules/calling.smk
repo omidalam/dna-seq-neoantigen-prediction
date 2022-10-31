@@ -4,8 +4,7 @@ rule mutect2:
         fasta="resources/genome.fasta",
         tumor_bam="results/recal/{sample}.sorted.bam",
     output:
-        vcf="results/mutect/{sample}/somatic.snvs.vcf.gz",
-        # test="results/mutect/{sample}/test.txt",
+        vcf="results/{sample}/somatic/mutect/somatic.snvs.vcf.gz",
     message:
         "Testing Mutect2 with {wildcards.sample}",
     params:
@@ -17,8 +16,6 @@ rule mutect2:
         "../envs/mutect2.yaml"
     log:
         "logs/mutect_{sample}.log",
-    # shell:
-    #     "echo {input.normal_bam} sample name is {params.normal_name}>{output.test}"
     script:
         "../scripts/mutect.py"
 rule strelka_somatic:
