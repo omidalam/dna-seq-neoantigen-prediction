@@ -13,6 +13,8 @@ scripts/.snakemake*
 # !resources/*
 !envs
 !envs/*
+!/workflow/envs
+!/workflow/envs/*
 !environment.yaml
 !LICENSE
 !README.md
