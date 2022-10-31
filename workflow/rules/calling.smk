@@ -1,3 +1,20 @@
+rule somatic_sniper:
+    input:
+        normal=get_normal_bam,
+        ref="resources/genome.fasta",
+        tumor="results/recal/{sample}.sorted.bam"
+    output:"results/{sample}/somatic/somatic_sniper/somatic.snvs.vcf"
+    params:
+        normal_name=get_normal,
+    conda:
+        "../envs/somaticsniper.yaml"
+    log:
+        "logs/{sample}/somatic_sniper.log",
+    threads: 2
+    shell: """
+    bam-somaticsniper -Q 40 -G -L -q 1 -F vcf -f {input.ref} {input.tumor} {input.normal} {output}
+    """
+
 rule mutect2:
     input:
         normal_bam=get_normal_bam,
