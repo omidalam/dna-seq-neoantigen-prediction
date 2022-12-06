@@ -110,7 +110,8 @@ caller = list(
 
 
 def get_cutadapt_input(wildcards):
-    unit = units.loc[wildcards.sample].loc[wildcards.unit].loc[wildcards.seqtype]
+    # unit = units.loc[wildcards.sample].loc[wildcards.unit].loc[wildcards.seqtype]
+    unit = units.loc[wildcards.sample].loc[wildcards.seqtype,wildcards.unit] #modified OG
 
     if pd.isna(unit["fq1"]):
         # SRA sample (always paired-end for now)
@@ -131,21 +132,23 @@ def get_cutadapt_input(wildcards):
         # paired end local sample
         return expand(
             "pipe/cutadapt/{S}/{T}/{U}.{{read}}.fastq{E}".format(
-                S=unit.sample, U=unit.unit, T=unit.sequencing_type, E=ending
+                S=wildcards.sample, U=unit.unit, T=unit.sequencing_type, E=ending
             ),
-            read=["fq1", "fq2"],
+            # read=["fq1", "fq2"],
+            read=["R1", "R2"], #og
         )
 
 
 def get_cutadapt_pipe_input(wildcards):
-    pattern = (
-        units.loc[wildcards.sample]
-        .loc[wildcards.seqtype]
-        .loc[wildcards.unit, wildcards.fq]
-    )
-    files = list(sorted(glob.glob(pattern)))
-    assert len(files) > 0, "no files found at {}".format(pattern)
-    return files
+    # pattern = (
+    #     units.loc[wildcards.sample]
+    #     .loc[wildcards.seqtype]
+    #     .loc[wildcards.unit, wildcards.fq]
+    # )
+    # files = list(sorted(glob.glob(pattern)))
+    # assert len(files) > 0, "no files found at {}".format(pattern)
+    # return files
+    return (units.loc[wildcards.sample].loc[wildcards.seqtype].loc[wildcards.unit, ["fq1","fq2"]].to_list())
 
 
 def is_paired_end(sample, seqtype):
@@ -167,7 +170,8 @@ def get_fastqs(wc):
     if config["trimming"]["activate"]:
         return expand(
             "results/trimmed/{sample}/{seqtype}/{unit}_{read}.fastq.gz",
-            unit=units.loc[wc.seqtype].loc[wc.sample, "unit_name"],
+            # unit=units.loc[wc.seqtype].loc[wc.sample, "unit_name"],
+            unit=units.loc[wc.sample].loc[wc.seqtype, "unit"], #modified by OG
             sample=wc.sample,
             read=wc.read,
             seqtype=wc.seqtype,

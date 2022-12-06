@@ -15,7 +15,7 @@ rule cutadapt_pipe:
         pipe("pipe/cutadapt/{sample}/{seqtype}/{unit}.{fq}.{ext}"),
     log:
         "logs/pipe-fastqs/cutadapt/{sample}-{seqtype}-{unit}.{fq}.{ext}.log",
-    wildcard_constraints:
+    wildcard_constraints: 
         ext=r"fastq|fastq\.gz",
     threads: 0  # this does not need CPU
     shell:
