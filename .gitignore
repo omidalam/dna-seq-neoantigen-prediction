@@ -1,4 +1,8 @@
-*
+#*
+.snakemake/
+*.svg
+logs/
+reads/
 !workflow
 !workflow/*
 !workflow/scripts
@@ -27,3 +31,5 @@ log/*
 !.gitattributes
 !.test
 !.test/data
+!tmp/tmp
+
