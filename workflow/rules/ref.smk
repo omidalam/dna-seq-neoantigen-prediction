@@ -172,6 +172,27 @@ rule bwa_index:
     wrapper:
         "0.45.1/bio/bwa/index"
 
+rule HLA_index:
+    input: 
+        "config/HLA_Data/hla_reference_dna.fasta",
+    output:
+        multiext("config/HLA_Data/hla_reference_dna.fasta", ".amb", ".ann", ".bwt", ".pac", ".sa"),
+    log:
+        "logs/hla_index.log",
+    cache: True
+    wrapper:
+        "0.45.1/bio/bwa/index"
+
+# rule HLA_index2: #OG
+#     input:
+#         "config/HLA_Data/hla_reference_dna.fasta",
+#     output:
+#         multiext("config/HLA_Data/hla_reference_dna.fasta", ".0123",".amb",".ann",".bwt.2bit.64",".pac"),
+#     log:
+#         "logs/bwa-mem2_index/hla_index2.log",
+#     wrapper:
+#         "v1.21.1/bio/bwa-mem2/index"
+
 
 rule download_HLALA_graph:
     output:
