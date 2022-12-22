@@ -36,13 +36,76 @@ rule parse_HLA_LA:
     script:
         "../scripts/parse_HLA_types.py"
 
+rule map_hla_reads: #OG
+    input:
+        reads=get_map_reads_input,
+        idx=rules.HLA_index.output,
+    output:
+        "results/HLA_mapped/{sample}.hla.sorted.bam",
+    log:
+        "logs/bwa_mem_hla/{sample}.log",
+    params:
+        index=lambda w, input: os.path.splitext(input.idx[0])[0],
+        extra=get_read_group,
+        sort="samtools",
+        sort_order="coordinate",
+    threads: 8
+    wrapper:
+        "0.56.0/bio/bwa/mem"
+
+# rule map_hla_reads: #OG
+#     input:
+#         reads=get_map_reads_input,
+#         idx=rules.HLA_index2.output,
+#     output:
+#         "results/HLA_mapped/{sample}.hla.sorted.bam",
+#     log:
+#         "logs/bwa_mem_hla/{sample}.log",
+#     params:
+#         index=lambda w, input: os.path.splitext(input.idx[0])[0],
+#         extra=get_read_group,
+#         sort="samtools",
+#         sort_order="coordinate",
+#     threads: 8
+#     wrapper:
+#         "v1.21.1/bio/bwa-mem2/mem"
+
+# rule filter_hla_reads: #OG
+#     input:
+#         "results/HLA_mapped/{sample}.hla.sorted.bam",
+#     output:
+#         bam="results/HLA_mapped/{sample}.hla.filtered.sorted.bam",
+#         idx="results/HLA_mapped/{sample}.hla.filtered.sorted.bai",
+#     log:
+#         "logs/bwa_mem_hla/{sample}.filter.log",
+#     params:
+#         extra="-F 0x4",  
+#     threads: 2
+#     wrapper:
+#         "v1.21.0/bio/samtools/view"
+
+rule separate_hla_reads: # OG
+    input:
+        "results/HLA_mapped/{sample}.hla.sorted.bam",
+    output:
+        temp("results/HLA_mapped/{sample}.R1.fq.gz"),
+        temp("results/HLA_mapped/{sample}.R2.fq.gz"),
+    params:
+        sort = "-m 4G",
+        bam2fq = "-n -F 2308" #OG removed
+    threads:  # Remember, this is the number of samtools' additional threads
+        3     # At least 2 threads have to be requested on cluster sumbission.
+              # Thus, this value - 2 will be sent to samtools sort -@ argument.
+    wrapper:
+        "0.61.0/bio/samtools/bam2fq/separate"
+
 
 rule razers3:
     input:
         reads="results/merged/DNA/{sample}_{fq}.fastq.gz",
     output:
         bam="results/razers3/bam/{sample}_{fq}.bam",
-    threads: 8
+    threads: 16
     log:
         "logs/razers3/{sample}_{fq}.log",
     params:
