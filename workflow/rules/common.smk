@@ -209,18 +209,30 @@ def get_recalibrate_quality_input(wildcards, bai=False):
 
 ## HLA Typing ##
 
-
-def get_optitype_reads_input(wildcards):
+def get_optitype_reads_input(wildcards): #OG 
     if is_activated("HLAtyping/optitype_prefiltering"):
         if is_paired_end(wildcards.sample, "DNA"):
             return expand(
-                "results/razers3/fastq/{sample}_{fq}.fished.fastq",
+                "results/HLA_mapped/{sample}.{fq}.fq.gz",
                 sample=wildcards.sample,
                 fq=["R1", "R2"],
             )
-        return "results/razers3/fastq/{sample}_single.fastq"
+        return "results/razers3/fastq/{sample}_single.fastq" 
+        # need to check what happens for single-end reads
     else:
         return get_map_reads_input(wildcards)
+
+# def get_optitype_reads_input(wildcards): #OG original
+#     if is_activated("HLAtyping/optitype_prefiltering"):
+#         if is_paired_end(wildcards.sample, "DNA"):
+#             return expand(
+#                 "results/razers3/fastq/{sample}_{fq}.fished.fastq",
+#                 sample=wildcards.sample,
+#                 fq=["R1", "R2"],
+#             )
+#         return "results/razers3/fastq/{sample}_single.fastq"
+#     else:
+#         return get_map_reads_input(wildcards)
 
 
 def get_oncoprint_batch(wildcards):
