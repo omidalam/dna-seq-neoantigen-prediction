@@ -62,6 +62,8 @@ rule merge_fastqs:
         get_fastqs,
     output:
         "results/merged/{seqtype}/{sample}_{read}.fastq.gz",
+        # OG Razers3 can't accept fake gzip files. They really should be gzip.
+        # "results/merged/{seqtype}/{sample}_{read}.fastq", #OG 
     log:
         "logs/merge-fastqs/{seqtype}_{sample}_{read}.log",
     wildcard_constraints:
