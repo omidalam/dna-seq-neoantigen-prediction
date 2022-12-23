@@ -38,7 +38,8 @@ rule parse_HLA_LA:
 
 rule map_hla_reads: #OG
     input:
-        reads=get_map_reads_input,
+        # reads=get_map_reads_input,
+        reads=get_quant_reads_input, # RNA
         idx=rules.HLA_index.output,
     output:
         "results/HLA_mapped/{sample}.hla.sorted.bam",
@@ -94,7 +95,7 @@ rule separate_hla_reads: # OG
         sort = "-m 4G",
         bam2fq = "-n -F 2308" #OG removed
     threads:  # Remember, this is the number of samtools' additional threads
-        3     # At least 2 threads have to be requested on cluster sumbission.
+        8     # At least 2 threads have to be requested on cluster sumbission.
               # Thus, this value - 2 will be sent to samtools sort -@ argument.
     wrapper:
         "0.61.0/bio/samtools/bam2fq/separate"
@@ -129,7 +130,7 @@ rule bam2fq:
         "0.61.0/bio/samtools/bam2fq/interleaved"
 
 
-rule OptiType:
+rule OptiType: #og w rna
     input:
         reads=get_optitype_reads_input,
     output:
@@ -140,9 +141,29 @@ rule OptiType:
         "logs/optitype/{sample}.log",
     params:
         extra=config["params"]["optitype"],
-        sequencing_type="dna",
-    wrapper:
-        "0.63.0/bio/optitype"
+        sequencing_type="dna", #og
+    # resources:
+        # mem_mb=30000
+    conda:
+        "../envs/optitype.yaml"
+    shell:
+        "OptiTypePipeline.py --input {input} --outdir results/optitype/{wildcards.sample} --prefix {wildcards.sample} --dna"
+
+# rule OptiType: #og original
+#     input:
+#         reads=get_optitype_reads_input,
+#     output:
+#         multiext(
+#             "results/optitype/{sample}/{sample}", "_coverage_plot.pdf", "_result.tsv"
+#         ),
+#     log:
+#         "logs/optitype/{sample}.log",
+#     params:
+#         extra=config["params"]["optitype"],
+#         sequencing_type="dna",
+#         sequencing_type="rna", #og
+#     wrapper:
+#         "0.63.0/bio/optitype"
 
 
 rule parse_Optitype:

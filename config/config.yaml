@@ -62,7 +62,7 @@ affinity:
 HLAtyping:
   # activate to use razers3 to pre-filter reads before using optitype
   optitype_prefiltering:
-    activate: false
+    activate: true
   optitype_data: "config/HLA_Data/hla_reference_dna.fasta"
   # activate to predict MHC-I and MHC-II alleles with HLA-LA
   HLA_LA:

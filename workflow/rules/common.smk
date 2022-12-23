@@ -209,16 +209,16 @@ def get_recalibrate_quality_input(wildcards, bai=False):
 
 ## HLA Typing ##
 
-def get_optitype_reads_input(wildcards): #OG 
+def get_optitype_reads_input(wildcards): #OG using rna data
     if is_activated("HLAtyping/optitype_prefiltering"):
-        if is_paired_end(wildcards.sample, "DNA"):
+        if is_paired_end(wildcards.sample, "RNA"):
             return expand(
                 "results/HLA_mapped/{sample}.{fq}.fq.gz",
                 sample=wildcards.sample,
                 fq=["R1", "R2"],
             )
-        return "results/razers3/fastq/{sample}_single.fastq" 
-        # need to check what happens for single-end reads
+        return "esults/HLA_mapped/{sample}.fq.gz" 
+        # need to verify that it works for single-end reads
     else:
         return get_map_reads_input(wildcards)
 
