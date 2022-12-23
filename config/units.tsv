@@ -1,5 +1,5 @@
 sample	sequencing_type	unit	fq1	fq2	sra	adapters
-A_normal	DNA	lane1	reads/SRR7890874_1.fastq	reads/SRR7890874_2.fastq		
-A_normal	RNA	lane3	reads/SRR9134536_1.fastq	reads/SRR9134536_2.fastq		
-A_tumor	DNA	lane2	reads/SRR7890883_1.fastq	reads/SRR7890883_2.fastq		
-A_tumor	RNA	lane4	reads/SRR9134757_1.fastq	reads/SRR9134757_2.fastq		
+A_normal	DNA	lane1	/mnt/reads/SRR7890874_1.fastq	/mnt/reads/SRR7890874_2.fastq		
+A_normal	RNA	lane3	/mnt/reads/SRR9134536_1.fastq	/mnt/reads/SRR9134536_2.fastq		
+A_tumor	DNA	lane2	/mnt/reads/SRR7890883_1.fastq	/mnt/reads/SRR7890883_2.fastq		
+A_tumor	RNA	lane4	/mnt/reads/SRR9134757_1.fastq	/mnt/reads/SRR9134757_2.fastq		
