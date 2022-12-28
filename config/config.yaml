@@ -54,7 +54,7 @@ affinity:
     params: "-BA -l 9 -s -xls"
     location: "../netMHCpan-4.0"
   netMHCIIpan:
-    activate: false
+    activate: true
     params: "-length 15 -s -xls"
     location: "../netMHCIIpan-4.0"
 
