@@ -30,9 +30,9 @@ rule get_cdna:
 
 rule kallisto_index:
     input:
-        "resources/genome.cdna.fasta",
+        fasta="resources/genome.cdna.fasta",
     output:
-        "resources/kallisto/transcripts.idx",
+        index="resources/kallisto/transcripts.idx",
     params:
         extra="",
     log:
