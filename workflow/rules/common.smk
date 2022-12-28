@@ -410,9 +410,9 @@ def get_alleles_MHCI(wildcards):
 
 def get_alleles_MHCII(wildcards):
     if wildcards.group == "wt":
-        return "results/HLA-LA/hlaI_{S}.tsv".format(S=get_normal(wildcards))
+        return "results/HLA-LA/hlaII_{S}.tsv".format(S=get_normal(wildcards))
     else:
-        return "results/HLA-LA/hlaI_{S}.tsv".format(S=wildcards.sample)
+        return "results/HLA-LA/hlaII_{S}.tsv".format(S=wildcards.sample)
 
 
 def get_normal_bam(wildcards):
