@@ -44,7 +44,7 @@ rule map_hla_reads: #OG
     output:
         "results/HLA_mapped/{sample}.hla.sorted.bam",
     log:
-        "logs/bwa_mem_hla/{sample}.log",
+        "logs/bwa_mem_hla/{sample}_map_reads.log",
     params:
         index=lambda w, input: os.path.splitext(input.idx[0])[0],
         extra=get_read_group,
@@ -89,13 +89,15 @@ rule separate_hla_reads: # OG
     input:
         "results/HLA_mapped/{sample}.hla.sorted.bam",
     output:
-        temp("results/HLA_mapped/{sample}.R1.fq.gz"),
-        temp("results/HLA_mapped/{sample}.R2.fq.gz"),
+        "results/HLA_mapped/{sample}.R1.fq.gz",
+        "results/HLA_mapped/{sample}.R2.fq.gz",
     params:
         sort = "-m 4G",
         bam2fq = "-n -F 2308" #OG removed
+    log:
+        "logs/bwa_mem_hla/{sample}_sep_reads.log",
     threads:  # Remember, this is the number of samtools' additional threads
-        16     # At least 2 threads have to be requested on cluster sumbission.
+        4     # At least 2 threads have to be requested on cluster sumbission.
               # Thus, this value - 2 will be sent to samtools sort -@ argument.
     wrapper:
         "0.61.0/bio/samtools/bam2fq/separate"
@@ -179,4 +181,4 @@ rule parse_Optitype:
         "logs/parse-optitype/{sample}.log",
     shell:
         "cut {input} -f2-7 | awk 'NR == 1 {{print}} NR>1 {{for (i = 1; i<=6; ++i) sub(/^/, \"&HLA-\", $i); print}}' "
-        '| sed -e s/[*,:]//g | sed "s/ /\t/g" > {output} 2> {log}'
+        '| sed -e s/[*]//g | sed "s/ /\t/g" > {output} 2> {log}'
