@@ -5,7 +5,7 @@ rule HLA_LA:
         index="resources/graphs/PRG_MHC_GRCh38_withIMGT/serializedGRAPH",
     output:
         "results/HLA-LA/output/{sample}/hla/R1_bestguess_G.txt",
-    threads: 7
+    threads: 16
     log:
         "logs/HLA-LA/{sample}.log",
     params:
@@ -50,7 +50,7 @@ rule map_hla_reads: #OG
         extra=get_read_group,
         sort="samtools",
         sort_order="coordinate",
-    threads: 8
+    threads: 16
     wrapper:
         "0.56.0/bio/bwa/mem"
 
@@ -95,7 +95,7 @@ rule separate_hla_reads: # OG
         sort = "-m 4G",
         bam2fq = "-n -F 2308" #OG removed
     threads:  # Remember, this is the number of samtools' additional threads
-        8     # At least 2 threads have to be requested on cluster sumbission.
+        16     # At least 2 threads have to be requested on cluster sumbission.
               # Thus, this value - 2 will be sent to samtools sort -@ argument.
     wrapper:
         "0.61.0/bio/samtools/bam2fq/separate"
